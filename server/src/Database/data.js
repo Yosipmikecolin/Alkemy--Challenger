@@ -15,12 +15,12 @@ mysqlConection.connect((e)=>{
 
     if(e){
 
-        console.log("Hubo un error: ",e);
+        console.log("THERE WAS A MISTAKE: ",e);
         return;
         
     }else{
 
-        console.log("CONECTADO A LA BASE DE DATOS");
+        console.log("CONNECTED TO THE DATABASE");
        
     }
 

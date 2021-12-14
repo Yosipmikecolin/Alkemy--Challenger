@@ -10,29 +10,93 @@ var email = "";
 var password = "";
 
 
-
-router.get("/get_data", (req,res)=>{
+//GET BUDGET -------------------
+router.get("/", (req,res)=>{
     
+    mysqlConection.query(`SELECT Id, Concepto, Monto, Fecha, Tipo FROM registro`, function (error, rows) {
+ 
+     if (error){
+ 
+      res.status(400);
+      throw error;
+     
+     }else{
+ 
+      res.json(rows).status(200);
+      
+      
+      }  
+         
+         });  
+     });
 
-mysqlConection.query(`SELECT Id, Concepto, Monto, Fecha, Tipo FROM registro LIMIT 0,${req.query.indice}`, function (error, rows, fields) {
 
-    if (error){
 
-     throw error;
+//CREATE A BUDGET ----------------
+router.post("/register",(req,res,next)=>{
+
+     mysqlConection.query(`INSERT INTO registro VALUES (NULL,'${req.body.concepto}','${req.body.monto}','${req.body.fecha}','${req.body.tipo}')`,(e,result)=>{
+
+        if(e){
+
+            res.json("ERROR WHEN REGISTERING",e);
+
+        }else{
+
+            res.send({"status":"200"});
+            next();
+        }
+
+    });
+
+});
+
+
+
+//UPDATE BUDGET ----------------
+router.put("/update",(req,res,next)=>{
+
+    mysqlConection.query(`UPDATE registro SET Concepto='${req.body.concepto}',Monto='${req.body.monto}',Fecha='${req.body.fecha}',Tipo='${req.body.tipo}' WHERE Id = '${req.body.id}'`,(e,result)=>{
+     
+    if(e){
+
+      res.json("ERROR WHEN REGISTERING: ",e);
 
     }else{
 
-     res.json(rows);
-     //console.log();
+     res.send({"status":"200"});
+     next();
 
-     }  
-        
-        });  
+    }
+        });
+    
     });
 
 
 
-router.post("/register",async (req,res,next)=>{
+//DELETE BUDGET ----------------
+router.delete("/delete",(req,res,next)=>{
+
+    mysqlConection.query(`DELETE FROM registro WHERE Id = ${req.query.id}`,(e,result)=>{
+
+    if(e){
+     res.json("HUBO UN ERROR:",e);
+     res.statusCode(500);
+
+    }else{
+
+     res.send({"status":"200"});
+     next();
+
+    }
+        });
+       
+    });
+
+
+
+
+router.post("/sign_up",async (req,res,next)=>{
 
    
     usuario = req.body.username;
@@ -96,54 +160,6 @@ router.post("/login",async (req,res,next)=>{
 
 
 
-
-
-router.post("/register_operaction",(req,res,next)=>{
-
-    mysqlConection.query(`INSERT INTO registro VALUES (NULL,'${req.body.concepto}','${req.body.monto}','${req.body.fecha}','${req.body.tipo}')`,(e,result)=>{
-
-
-        if(e){
-
-            console.log(e);
-            res.json("ERROR AL AL REGISTRAR: ",e);
-        }else{
-
-            res.redirect("http://localhost:3000/");
-            next();
-        }
-
-
-    });
-
-
-});
-
-
-
-router.post("/update_operaction",(req,res,next)=>{
-
-    mysqlConection.query(`UPDATE registro SET Concepto='${req.body.concepto}',Monto='${req.body.monto}',Fecha='${req.body.fecha}',Tipo='${req.body.tipo}' WHERE Id = '${req.body.id}'`,(e,result)=>{
-
-
-        if(e){
-
-            console.log(e);
-            res.json("ERROR AL AL REGISTRAR: ",e);
-        }else{
-
-            res.redirect("http://localhost:3000/");
-            next();
-        }
-
-
-    });
-
-
-});
-
-
-
 router.get("/auth",(req,res)=>{
 
     if(usuario === "" || email === ""){
@@ -175,25 +191,7 @@ router.get("/auth/close",(req,res,next)=>{
 });
 
 
-router.post("/delete",(req,res,next)=>{
 
-    
-    mysqlConection.query(`DELETE FROM registro WHERE Id = ${req.body.id}`,(e,result)=>{
-
-        if(e){
-
-            res.json("HUBO UN ERROR:",e);
-            res.statusCode(500);
-        }else{
-
-            res.json(true);
-            next();
-        }
-
-    });
-   
-
-});
 
 
 

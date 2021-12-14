@@ -2,8 +2,8 @@ const express = require("express");
 const app = express();
 
 
-//CONFIGURACIONES
-app.set("puerto",process.env.PORT || 4000);
+//CONFIGURATIONS
+app.set("port",process.env.PORT || 4000);
 
 
 
@@ -14,7 +14,7 @@ app.use(express.urlencoded({extended:false}));
 
 
 
-// CONFIGURACIONS DE CABECERAS
+// HEADER CONFIGURATIONS
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -24,15 +24,15 @@ app.use(function(req, res, next) {
   
 
 
-//RUTAS
+//ROUTES
 app.use("/api",require("./Routers/index"));
 
 
 
 
-//SERVIDOR
-app.listen(app.get("puerto"),()=>{
+//SERVER
+app.listen(app.get("port"),()=>{
 
-    console.log("ESCUCHANDO EN EL PUERTO: ",app.get("puerto"));
+    console.log("LISTENING IN THE PORT: ",app.get("port"));
     
 })
