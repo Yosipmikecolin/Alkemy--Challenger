@@ -1,6 +1,10 @@
 const {Router} = require("express");
 const router = Router();
 const mysqlConection = require("../Database/data");
+const jwt = require("jsonwebtoken");
+
+
+
 
 
 
@@ -8,6 +12,7 @@ const mysqlConection = require("../Database/data");
 var usuario = "";
 var email = "";
 var password = "";
+
 
 
 //GET BUDGET -------------------
@@ -23,7 +28,7 @@ router.get("/", (req,res)=>{
      }else{
  
       res.json(rows).status(200);
-      
+    
       
       }  
          
@@ -43,7 +48,7 @@ router.post("/register",(req,res,next)=>{
 
         }else{
 
-            res.send({"status":"200"});
+            res.json({"status":"200"});
             next();
         }
 
@@ -64,7 +69,7 @@ router.put("/update",(req,res,next)=>{
 
     }else{
 
-     res.send({"status":"200"});
+     res.json({"status":"200"});
      next();
 
     }
@@ -85,7 +90,7 @@ router.delete("/delete",(req,res,next)=>{
 
     }else{
 
-     res.send({"status":"200"});
+     res.json({"status":"200"});
      next();
 
     }
@@ -99,21 +104,19 @@ router.delete("/delete",(req,res,next)=>{
 router.post("/sign_up",async (req,res,next)=>{
 
    
-    usuario = req.body.username;
-    email = req.body.email;
-    password = req.body.password;
+    const {username,email,password} = req.body;
    
     mysqlConection.query(`INSERT INTO usuarios VALUES (null,'${usuario}','${email}','${password}') `,async (err,result)=>{
-
 
         if(err){
 
            
-            console.log(err);
+           res.json(err);
 
         }else{
            
-            res.redirect("http://localhost:3000/");
+            res.json({"status":"200"});
+            const accessToken = generaAccesToken(username,email);
             next();
         }
 
@@ -121,6 +124,15 @@ router.post("/sign_up",async (req,res,next)=>{
 
 });
 
+
+
+
+//FUNCTION JWS
+function generaAccesToken(username,email){
+
+    return jwt.sign({username:username,email:email},)
+
+}
 
 router.post("/login",async (req,res,next)=>{
 
