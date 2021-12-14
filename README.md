@@ -1,0 +1,5 @@
+1- ANTES DE PROBAR EL PROYECTO DEBES INICIAR LA BASE DE DATOS YA SEA EN XAMPPP O MYSQL WORKBENCH
+
+- nombre de la base de datos: gastos
+- 2 tablas llamadas registro y usuarios
+- 3 DEBES INICIAR EL SERVIDOR Y EL CLIENTE
