@@ -100,24 +100,35 @@ router.delete("/delete",(req,res,next)=>{
 
 
 
+router.get("/auth",ValidateToken,(req,res)=>{
 
-router.post("/sign_up",async (req,res,next)=>{
+      res.json(true);
+    
+});
+    
+
+
+
+router.post("/sign_up",(req,res)=>{
 
    
     const {username,email,password} = req.body;
    
-    mysqlConection.query(`INSERT INTO usuarios VALUES (null,'${usuario}','${email}','${password}') `,async (err,result)=>{
+    mysqlConection.query(`INSERT INTO usuarios VALUES (null,'${username}','${email}','${password}') `,async (err,rows)=>{
 
         if(err){
 
-           
            res.json(err);
 
         }else{
            
-            res.json({"status":"200"});
-            const accessToken = generaAccesToken(username,email);
-            next();
+            const accessToken = generaAccesToken(email);
+            res.header("autorizacionToken",accessToken).json({
+                user:rows[0].Username,
+                token:accessToken
+            });
+           
+            
         }
 
     });
@@ -126,42 +137,32 @@ router.post("/sign_up",async (req,res,next)=>{
 
 
 
-
-//FUNCTION JWS
-function generaAccesToken(username,email){
-
-    return jwt.sign({username:username,email:email},)
-
-}
-
-router.post("/login",async (req,res,next)=>{
-
-   
+router.post("/sign_in",async (req,res)=>{
     
-    email = req.body.email;
-    password = req.body.password;
+    const {email,password} = req.body;
     //encryPassword = await bcrypt.hashSync(password,8);
-    mysqlConection.query(`SELECT Username FROM usuarios WHERE Password ='${password}'`,async (err,rows,result)=>{
+    mysqlConection.query(`SELECT Username FROM usuarios WHERE Password ='${password}' AND Email = '${email}'`,async (err,rows)=>{
 
         if(err){
 
-            console.log(err);
+            res.json(err);
 
         }else{
             
-            
-            if(rows[0]){
+           if(rows.length){
 
-                res.redirect("http://localhost:3000/");
-                usuario = rows[0].Username;
-                next();
+              const accessToken = generaAccesToken(email);
+              res.header("autorizacionToken",accessToken).json({
+              user:rows[0].Username,
+              token:accessToken
 
-            }else{
+              });
 
-                res.redirect("http://localhost:3000/auth");
-                next();
-            }
-          
+           }else{
+
+            res.json(false);
+
+           }
      
         }
 
@@ -170,27 +171,45 @@ router.post("/login",async (req,res,next)=>{
 });
 
 
+//FUNCTION JWS
+function generaAccesToken(email){
+
+    const usuario = {email:email}
+    return jwt.sign(usuario,process.env.HASH,{expiresIn:"1m"})
+
+}
 
 
-router.get("/auth",(req,res)=>{
+//FUNCTION VALIDATE TOKEN
+function ValidateToken(req,res,next){
 
-    if(usuario === "" || email === ""){
+    const accessToken = req.headers;
+    if(!accessToken["autorizaciontoken"]){
 
-        res.json(false);
-
+        res.json("No hay token");
+        
     }else{
 
-        res.json({"user":usuario,"email":email});
-       
+     jwt.verify(accessToken["autorizaciontoken"],process.env.HASH,(e,user)=>{
+
+        if(e){
+
+          res.json(false);
+
+        }else{
+
+         res.json(true);
+         next();
+
+        }
+        });
     }
-
-});
-
+}
 
 
 
 
-router.get("/auth/close",(req,res,next)=>{
+router.get("/sign_out",(req,res,next)=>{
 
 
      usuario = "";

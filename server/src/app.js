@@ -1,11 +1,12 @@
 const express = require("express");
 const app = express();
+const path = require("path");
 const dotenv = require("dotenv");
 
 
 //CONFIGURATIONS
 app.set("port",process.env.PORT || 4000);
-dotenv.config();
+dotenv.config({path:path.join(__dirname+"/.env")});
 
 
 
@@ -35,6 +36,6 @@ app.use("/api",require("./Routers/index"));
 //SERVER
 app.listen(app.get("port"),()=>{
 
-    console.log("LISTENING IN THE PORT: ",app.get("port"),process.env.HASH);
+    console.log("LISTENING IN THE PORT: ",app.get("port"));
     
 })
