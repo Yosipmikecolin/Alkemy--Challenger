@@ -11,7 +11,7 @@ const mysqlConection = mysql.createConnection({
 });
 
 
-mysqlConection.connect((e)=>{
+mysqlConection.connect((e)=> {
 
     if(e){
 

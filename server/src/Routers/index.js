@@ -2,17 +2,7 @@ const {Router} = require("express");
 const router = Router();
 const mysqlConection = require("../Database/data");
 const jwt = require("jsonwebtoken");
-
-
-
-
-
-
-//VARIABLES GLOBALES
-var usuario = "";
-var email = "";
-var password = "";
-
+const bcrypt = require("bcrypt");
 
 
 //GET BUDGET -------------------
@@ -113,8 +103,8 @@ router.post("/sign_up",(req,res)=>{
 
    
     const {username,email,password} = req.body;
-   
-    mysqlConection.query(`INSERT INTO usuarios VALUES (null,'${username}','${email}','${password}') `,async (err,rows)=>{
+    const passwordCry = bcrypt.hashSync(password,8);
+    mysqlConection.query(`INSERT INTO usuarios VALUES (null,'${username}','${email}','${passwordCry}') `,async (err,rows)=>{
 
         if(err){
 
@@ -124,7 +114,7 @@ router.post("/sign_up",(req,res)=>{
            
             const accessToken = generaAccesToken(email);
             res.header("autorizacionToken",accessToken).json({
-                user:rows[0].Username,
+                user:username,
                 token:accessToken
             });
            
@@ -137,20 +127,24 @@ router.post("/sign_up",(req,res)=>{
 
 
 
-router.post("/sign_in",async (req,res)=>{
+router.post("/sign_in",(req,res)=>{
     
     const {email,password} = req.body;
-    //encryPassword = await bcrypt.hashSync(password,8);
-    mysqlConection.query(`SELECT Username FROM usuarios WHERE Password ='${password}' AND Email = '${email}'`,async (err,rows)=>{
+   
+    mysqlConection.query(`SELECT Username,Password FROM usuarios WHERE Email = '${email}'`,async (err,rows)=>{
+
 
         if(err){
 
             res.json(err);
+           
 
         }else{
             
-           if(rows.length){
+            const match = bcrypt.compareSync(password,rows[0].Password);
+           if(rows.length && match){
 
+              
               const accessToken = generaAccesToken(email);
               res.header("autorizacionToken",accessToken).json({
               user:rows[0].Username,
@@ -160,7 +154,7 @@ router.post("/sign_in",async (req,res)=>{
 
            }else{
 
-            res.json(false);
+             res.json(false);
 
            }
      
@@ -175,7 +169,7 @@ router.post("/sign_in",async (req,res)=>{
 function generaAccesToken(email){
 
     const usuario = {email:email}
-    return jwt.sign(usuario,process.env.HASH,{expiresIn:"1m"})
+    return jwt.sign(usuario,process.env.HASH,{expiresIn:"2d"})
 
 }
 
@@ -190,7 +184,7 @@ function ValidateToken(req,res,next){
         
     }else{
 
-     jwt.verify(accessToken["autorizaciontoken"],process.env.HASH,(e,user)=>{
+       jwt.verify(accessToken["autorizaciontoken"],process.env.HASH,(e,user)=>{
 
         if(e){
 
