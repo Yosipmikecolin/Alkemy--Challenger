@@ -7,24 +7,17 @@ const mysqlConection = mysql.createConnection({
     password:"",
     database:"gastos"
 
-
 });
-
 
 mysqlConection.connect((e)=> {
 
     if(e){
-
-        console.log("THERE WAS A MISTAKE: ",e);
-        return;
-        
+    console.log("THERE WAS A MISTAKE: ",e);
+    return; 
     }else{
-
-        console.log("CONNECTED TO THE DATABASE");
-       
+    console.log("CONNECTED TO THE DATABASE");
     }
-
-
 });
+
 
 module.exports = mysqlConection;
