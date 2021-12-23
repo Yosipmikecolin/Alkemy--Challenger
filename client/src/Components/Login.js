@@ -1,71 +1,105 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment,useState } from "react";
 import styled from "styled-components";
 import {useNavigate} from "react-router-dom";
+import {toast} from "react-hot-toast";
 
 function Login(){
 
 
     const [sesion,SetSesion] = useState(false);
-    const [auth,SetAuth] = useState(false);
     const navegacion = useNavigate();
+    const [inputs,SetInputs] = useState({username:"",email:"",password:""});
+  
+   
 
 
+    //OBTENER VALORES DE INPUTS
+    function OnchangeInputs(e){
 
-    function CerrarSesion(){
-
-        const http = new XMLHttpRequest();
-        http.onload = function(){
-
-            alert("Sesión cerrada");
-            return navegacion("/");
-        }
-
-        http.open("GET","http://localhost:4000/api/auth/close");
-        http.send();
+        const {name,value} = e.target;
+        SetInputs({...inputs,[name]:value});
 
     }
 
-    
-  
-    useEffect(()=>{
 
-      const http = new XMLHttpRequest();
-      http.onload = async function(){
 
-        if(this.response === "false"){
+    //REGISTRAR USUARIO
+     function RegisterUser(e){
 
-            SetAuth(false);
-           
-            
-        }else{
+        e.preventDefault();
+        const http = new XMLHttpRequest();
 
-            SetAuth(true);
+        http.onload = async function(){
 
+            const data = this.responseText;
+            const response = await JSON.parse(data);
+            localStorage.setItem("user",response.user);
+            localStorage.setItem("token",response.token);
+            SetInputs({username:"",email:"",password:""});
+            toast.success('Welcome '+response.user,{icon:'👏',duration:2500});
+            setTimeout(()=>{
+
+                navegacion("/");
+
+            },2500);
+        
         }
-      }
 
-      http.open("GET","http://localhost:4000/api/auth");
-      http.send();
+        http.open("POST","http://localhost:4000/auth/sign_up");
+        http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        http.send(`username=${inputs.username}&email=${inputs.email}&password=${inputs.password}`);
+       
+    }
 
-    },[auth]);
+
+    //LOGIN DE USUARIO
+    function LogIn(e){
+
+        e.preventDefault();
+        const http = new XMLHttpRequest();
+        http.onload = async function(){
+
+            const data = this.responseText;
+            const response = await JSON.parse(data);
+           
+            if(response.token){
+                localStorage.setItem("token",response.token);
+                localStorage.setItem("user",response.user);
+                SetInputs({username:"",email:"",password:""});
+                toast.success('Welcome '+response.user,{icon:'👏',duration:2500});
+                
+                setTimeout(()=>{
+
+                    navegacion("/");
+
+                },2500);
+            }else{
+                
+                toast.error("The username or password is incorrect")
+            }
+        }
+
+        http.open("POST","http://localhost:4000/auth/sign_in");
+        http.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+        http.send(`email=${inputs.email}&password=${inputs.password}`);
+
+    }
+
 
     return(
      <Fragment>
-         {!auth  ?
+        
          
         
-         <Form action={sesion ? "http://localhost:4000/api/register" : "http://localhost:4000/api/login"} method="POST">
-         <h1>{sesion ? "Registrar nuevo usuario" : "Iniciar sesión"}</h1>
+         <Form onSubmit={ sesion ? RegisterUser : LogIn} method="POST">
+         <h1>{sesion ? "Register user" : "Log in"}</h1>
 
-         <InputUser visual={sesion} type="text" placeholder="Username" name="username"/>
-         <Input type="email" placeholder="Email" name="email" required/>
-         <Input type="password" placeholder="Password" name="password" required/>
-         <Boton>{sesion ? "Registrar usuario" : "Iniciar sesión"}</Boton>
-         <Span>{sesion ? "¿Ya tienes cuenta? " : "¿Eres un nuevo usuario? "}<p onClick={()=>{SetSesion(!sesion)}}>{sesion ? "Iniciar sesión" : "Crear una cuenta"}</p></Span>
+         <InputUser type="text" placeholder="Username" visual={sesion}  name="username" value={inputs.username} onChange={OnchangeInputs}/>
+         <Input type="email" placeholder="Email" name="email" required value={inputs.email} onChange={OnchangeInputs}/>
+         <Input type="password" placeholder="Password" name="password"required value={inputs.password} onChange={OnchangeInputs}/>
+         <Boton>{sesion ? "Register user" : "Log in"}</Boton>
+         <Span>{sesion ? "¿You already have an account? " : "¿Are you a new user? "}<p onClick={()=>{SetSesion(!sesion)}}>{sesion ? "Log in" : "Create an account"}</p></Span>
         </Form>
-        
-        
-         : <BotonCerrarSesion onClick={CerrarSesion}>Cerrar sesión</BotonCerrarSesion>}
         
       
         </Fragment>
@@ -86,23 +120,13 @@ margin-right:auto;
 margin-top:100px;
 text-align:center;
 color:#fff;
-`;
 
+@media(max-width:450px){
 
-const BotonCerrarSesion = styled.button`
+    width:100%;
+    padding:10px;
 
-border:none;
-background-color:red;
-color:#fff;
-padding:15px 40px;
-border-radius:5px;
-font-family: "Poppins", sans-serif;
-font-size:18px;
-cursor:pointer;
-display:block;
-margin-left:auto;
-margin-right:auto;
-margin-top:200px;
+}
 `;
 
 
@@ -134,6 +158,8 @@ const Input = styled.input`
     border-radius:5px;
     font-family: "Poppins", sans-serif;
     font-size:16px;
+
+
 `;
 
 
