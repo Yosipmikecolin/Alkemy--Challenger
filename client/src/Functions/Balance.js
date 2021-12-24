@@ -7,20 +7,18 @@ function Balance(data){
     const [Egreso,SetEgreso] = useState(0);
 
     useEffect(()=>{
-        var ingreso  = 0;
-        var egreso  = 0;
-        data.forEach((item)=>{
-        if(item.Tipo === "ingreso"){
-        ingreso += converter(item.Monto);
-        SetIngreso(ingreso);
-        }else if(item.Tipo === "egreso"){
-        egreso += converter(item.Monto);
-        SetEgreso(egreso);  
-        }});
-        },[data]);
-
-
-        return[Ingreso,Egreso];
+    var ingreso  = 0;
+    var egreso  = 0;
+    data.forEach((item)=>{
+    if(item.Tipo === "ingreso"){
+    ingreso += converter(item.Monto);
+    SetIngreso(ingreso);
+    }else if(item.Tipo === "egreso"){
+    egreso += converter(item.Monto);
+    SetEgreso(egreso);  
+    }});
+    },[data]);
+    return[Ingreso,Egreso];
 
 }
 

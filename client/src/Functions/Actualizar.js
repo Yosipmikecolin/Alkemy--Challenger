@@ -24,8 +24,6 @@ function Actualizar(){
         http.send(`id=${dataAut.id}&concepto=${valor.concepto}&monto=${valor.monto}&fecha=${valor.fecha}&tipo=${valor.tipo}`);
         }
 
-
-
         return[UpdateBudget];
 }
 

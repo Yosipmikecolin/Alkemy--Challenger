@@ -1,4 +1,4 @@
-import { Fragment, useContext, useState } from "react";
+import { Fragment, useState } from "react";
 import {Route,NavLink,Routes} from "react-router-dom";
 import styled from "styled-components";
 import Formulario from "./Components/Formulario";
@@ -7,7 +7,6 @@ import Listado from "./Components/Listado";
 import {Toaster} from "react-hot-toast";
 import IconoMenu from "./Img/icono-menu.png";
 import IconoCerrar from "./Img/icono-cerrar.png";
-import { Contexto } from "./Provider/ProvedorDatos";
 
 
 function App() {
@@ -15,91 +14,64 @@ function App() {
 
   const [editar,SetEditar] = useState([]);
   const [menu,SetMenu] = useState(false);
-  const {texto} = useContext(Contexto);
+
   
-  
+  //SHOW MOBILE MENU
   function ShowMenu(){
-
-    document.getElementsByClassName("menuMobil")[0].style.top="0px";
-    SetMenu(true);
-
+  document.getElementsByClassName("menuMobil")[0].style.top="0px";
+  SetMenu(true);
   }
 
 
+  //HIDE MOBILE MENU
   function HideMenu(){
-    
-    document.getElementsByClassName("menuMobil")[0].style.top="-800px";
-    SetMenu(false);
+  document.getElementsByClassName("menuMobil")[0].style.top="-800px";
+  SetMenu(false);
   }
 
 
-  function CerrarSesion(){
-
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    window.location.reload();
-
-
-  }
 
   return (
-    <Fragment>
-      <Toaster/>
-      <Menu>
-        <NavLink to="/"> Home </NavLink>
-        <NavLink to="/register"> Register </NavLink>
-        <NavLink to="/sign"onClick={CerrarSesion} >{texto}</NavLink>
-        <Img src={menu ? IconoCerrar : IconoMenu} width="30px" alt="icono menu"onClick={menu ? HideMenu : ShowMenu} />
+  <Fragment>
+  <Toaster/>
+  <Menu>
+  <NavLink to="/"> Home </NavLink>
+  <NavLink to="/register"> Register </NavLink>
+  <NavLink to="/sign" >Sign</NavLink>
+  <Img src={menu ? IconoCerrar : IconoMenu} width="30px" alt="icono menu"onClick={menu ? HideMenu : ShowMenu} />
+  <MenuMobil className="menuMobil" onClick={HideMenu}>
+  <NavLink to="/"> Home </NavLink>
+  <NavLink to="/register"> Register </NavLink>
+  <NavLink to="/sign"> Sign </NavLink>
+  </MenuMobil>
+  </Menu>
 
-        <MenuMobil className="menuMobil" onClick={HideMenu}>
-        <NavLink to="/"> Home </NavLink>
-        <NavLink to="/register"> Register </NavLink>
-        <NavLink to="/sign"> Sign </NavLink>
-        </MenuMobil>
-      </Menu>
-
-    <Routes>
-      
-      <Route path="/" element={<Listado SetEditar={SetEditar}/>}/>
-      <Route path="/register" element={<Formulario SetEditar={SetEditar} editar={editar}/>}/>
-      <Route path="/sign" element={<Login/>}/>
-     
-    </Routes>
-    
+  <Routes>
+  <Route path="/" element={<Listado SetEditar={SetEditar}/>}/>
+  <Route path="/register" element={<Formulario SetEditar={SetEditar} editar={editar}/>}/>
+  <Route path="/sign" element={<Login/>}/>
+  </Routes>
+  </Fragment>
   
-    </Fragment>
-    
-   
   );
 }
 
 
 
 const Menu = styled.nav`
-
-background-color:#191A19;
-padding:20px;
-text-align:center;
-
-@media (max-width:450px){
-
+  background-color:#191A19;
+  padding:20px;
+  text-align:center;
+  @media (max-width:450px){
   display:flex;
   justify-content:flex-end;
-
   > a{
-
-    display:none;
-  }
-
-
-
-
-}
-
-a.active{
+  display:none;
+  }}
+  a.active{
   color:#4622ee;
-}
-a{
+  }
+  a{
   font-size:18px;
   margin:0px 20px 0px 20px;
   font-weight:bold;

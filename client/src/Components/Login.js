@@ -1,8 +1,7 @@
-import { Fragment,useContext,useState } from "react";
+import { Fragment,useState } from "react";
 import styled from "styled-components";
 import {useNavigate} from "react-router-dom";
 import {toast} from "react-hot-toast";
-import { Contexto } from "../Provider/ProvedorDatos";
 
 function Login(){
 
@@ -10,10 +9,11 @@ function Login(){
     const [sesion,SetSesion] = useState(false);
     const navegacion = useNavigate();
     const [inputs,SetInputs] = useState({username:"",email:"",password:""});
-    const {SetTexto} = useContext(Contexto);
+    
+  
   
 
-    //OBTENER VALORES DE INPUTS
+    //GET INPUT VALUES
     function OnchangeInputs(e){
     const {name,value} = e.target;
     SetInputs({...inputs,[name]:value});
@@ -21,7 +21,7 @@ function Login(){
 
 
 
-    //REGISTRAR USUARIO
+    //REGISTER USER
     function RegisterUser(e){
     e.preventDefault();
     const http = new XMLHttpRequest();
@@ -42,7 +42,7 @@ function Login(){
     }
 
 
-    //LOGIN DE USUARIO
+    //USER LOGIN
     function LogIn(e){
 
     e.preventDefault();
@@ -53,7 +53,6 @@ function Login(){
     if(response.token){
     localStorage.setItem("token",response.token);
     localStorage.setItem("user",response.user);
-    SetTexto("sign out")
     SetInputs({username:"",email:"",password:""});
     toast.success('Welcome '+response.user,{icon:'👏',duration:2500});      
     setTimeout(()=>{

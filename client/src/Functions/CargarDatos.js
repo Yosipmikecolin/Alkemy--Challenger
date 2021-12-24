@@ -7,13 +7,9 @@ function CargarMas(){
 
 
     function SumCant(data){
-
-        SetCant(cant + 10);
-        if(cant >= data.length){SetViewButton(false)}
-
+    SetCant(cant + 10);
+    if(cant >= data.length){SetViewButton(false)}
     }
-
-
 
     return [cant,viewButton,SumCant];
 }

@@ -9,9 +9,8 @@ import EliminarDato from "../Functions/EliminarDato";
 import EditarDato from "../Functions/EditarDato";
 import Balance from "../Functions/Balance";
 
-function Listado(){
 
-    
+function Listado(){
 
     const [cargando,SetCargando] = useState(false);
     const [data] = ObtenerDatos();
@@ -50,17 +49,17 @@ function Listado(){
     <Contenedor>
     {data.length ?
     <Fragment>
-    <InputFilter type="text" placeholder="Filtrar concepto" onChange={(e)=>{FunctionFilter(e.target.value,data)}}/>
+    <InputFilter type="text" placeholder="Filter concept" onChange={(e)=>{FunctionFilter(e.target.value,data)}}/>
     <table className="table table-dark">
     <thead>
     <tr>
     <th scope="col">#</th>
-    <th scope="col">Concepto</th>
-    <th scope="col">Monto</th>
-    <th scope="col">Fecha</th>
-    <th scope="col">Tipo</th>
-    <th scope="col">Modificar</th>
-    <th scope="col">Eliminar</th>
+    <th scope="col">Concept</th>
+    <th scope="col">Amount</th>
+    <th scope="col">Date</th>
+    <th scope="col">Type</th>
+    <th scope="col">Modify</th>
+    <th scope="col">Remove</th>
     </tr>
     </thead>
 
@@ -81,10 +80,10 @@ function Listado(){
     
     </tbody>
     </table>
-    {viewButton &&  <BotonCargar onClick={()=>{SumCant(data)}}>Cargar mas</BotonCargar>}
+    {viewButton &&  <BotonCargar onClick={()=>{SumCant(data)}}>Load more</BotonCargar>}
   
-    <h1>Total de Ingreso: {!Ingreso ? 0 : parseFloat(Ingreso).toFixed(3)}</h1>
-    <h1>Total de Egreso: {!Egreso ? 0 : parseFloat(Egreso).toFixed(3)}</h1>
+    <h1>Income: {!Ingreso ? 0 : parseFloat(Ingreso).toFixed(3)}</h1>
+    <h1>Expenses: {!Egreso ? 0 : parseFloat(Egreso).toFixed(3)}</h1>
     </Fragment>
     : <h1>No hay registros</h1>}
    </Contenedor>

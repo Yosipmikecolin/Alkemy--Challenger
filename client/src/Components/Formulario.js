@@ -45,7 +45,7 @@ function Formulario(){
     <Fragment> 
     <Form onSubmit={(e)=>{ dataUpdate ? UpdateBudget(e,CambiarValorInput,SetDataUpdate,dataUpdate,valor) : RegisterBudget(e,valor,CambiarValorInput)}}>
     <h2>{dataUpdate ? "Edit record" : "Registration"}</h2> 
-    <Input type="text" placeholder="Concepto" name="concepto" value={valor.concepto} onChange={(e)=>{onChangeValue(e)}}required/>
+    <Input type="text" placeholder="Concept" name="concepto" value={valor.concepto} onChange={(e)=>{onChangeValue(e)}}required/>
     <Input type="text" placeholder="5.400" name="monto" value={valor.monto}  onChange={(e)=>{onChangeValue(e)}}  required/>
     <Input type="date" placeholder="Fecha" name="fecha" value={valor.fecha}  onChange={(e)=>{onChangeValue(e)}} required/>
     {dataUpdate.id &&  <InputId type="text" name="id" defaultValue={dataUpdate.id} />}
@@ -58,7 +58,7 @@ function Formulario(){
     <option  value="egreso">egreso</option>
     </Fragment>}     
     </Select>
-    <Boton>{dataUpdate ? "Actualizar registro" : "registrar operacion"}</Boton> 
+    <Boton>{dataUpdate ? "Update registration" : "Register operation"}</Boton> 
     </Form>  
     </Fragment>
     );
