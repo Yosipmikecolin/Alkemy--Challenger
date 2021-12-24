@@ -1,5 +1,4 @@
-1- ANTES DE PROBAR EL PROYECTO DEBES INICIAR LA BASE DE DATOS YA SEA EN XAMPPP O MYSQL WORKBENCH
+- BEFORE TESTING THE PROJECT YOU MUST START THE DATABASE, EITHER IN XAMPPP OR MYSQL WORKBENCH
 
-- nombre de la base de datos: gastos
-- 2 tablas llamadas registro y usuarios
-- 3 DEBES INICIAR EL SERVIDOR Y EL CLIENTE
+1- Database name: gastos.
+2- To access the data balance page and the registration form you must first authenticate.
