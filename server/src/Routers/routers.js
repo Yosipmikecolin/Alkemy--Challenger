@@ -7,7 +7,8 @@ const mysqlConection = require("../Database/data");
 //GET BUDGET -------------------
 router.get("/", (req,res)=>{
     
-    mysqlConection.query(`SELECT Id, Concepto, Monto, Fecha, Tipo FROM registro`, function (e, rows) {
+    const {user} = req.query;
+    mysqlConection.query(`SELECT Id, Concepto, Monto, Fecha, Tipo FROM registro WHERE  User = '${user}'`, function (e, rows) {
     if(e){   
     res.json("ERROR"+e);
     }else{
@@ -18,14 +19,13 @@ router.get("/", (req,res)=>{
 
 
 //CREATE A BUDGET ----------------
-router.post("/register",(req,res,next)=>{
+router.post("/register",(req,res)=>{
 
-    mysqlConection.query(`INSERT INTO registro VALUES (NULL,'${req.body.concepto}','${req.body.monto}','${req.body.fecha}','${req.body.tipo}')`,(e,result)=>{
+    mysqlConection.query(`INSERT INTO registro VALUES (NULL,'${req.body.concepto}','${req.body.monto}','${req.body.fecha}','${req.body.tipo}', '${req.body.user}')`,(e,result)=>{
     if(e){
     res.json("ERROR"+e);
     }else{
-    res.json({"status":"200"});
-    next();
+    res.json(true);
     }
     });
 
@@ -34,30 +34,34 @@ router.post("/register",(req,res,next)=>{
 
 
 //UPDATE BUDGET ----------------
-router.put("/update",(req,res,next)=>{
+router.put("/update",(req,res)=>{
+
+    const {id,concepto,monto,fecha,tipo} = req.body;
+    if(id && concepto && monto && fecha && tipo){
 
     mysqlConection.query(`UPDATE registro SET Concepto='${req.body.concepto}',Monto='${req.body.monto}',Fecha='${req.body.fecha}',Tipo='${req.body.tipo}' WHERE Id = '${req.body.id}'`,(e,result)=>{
     if(e){
     res.json("ERROR: "+e);
     }else{
-    res.json({"status":"200"});
-    next();
-
+    res.json(true);
     }});
+
+    }else{
+    res.json(false);
+    }
     });
 
 
 
 //DELETE BUDGET ----------------
-router.delete("/delete",(req,res,next)=>{
+router.delete("/delete",(req,res)=>{
 
-    const id = req.query.id;
+    const id = req.body.id;
     mysqlConection.query(`DELETE FROM registro WHERE Id = ${id}`,(e,result)=>{
     if(e){
     res.json("ERROR:"+e);
     }else{
-    res.json({"status":"200"});
-    next();
+    res.json(true);
     }});  
     });
 
