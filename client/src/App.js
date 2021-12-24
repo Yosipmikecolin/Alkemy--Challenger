@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useContext, useState } from "react";
 import {Route,NavLink,Routes} from "react-router-dom";
 import styled from "styled-components";
 import Formulario from "./Components/Formulario";
@@ -7,6 +7,7 @@ import Listado from "./Components/Listado";
 import {Toaster} from "react-hot-toast";
 import IconoMenu from "./Img/icono-menu.png";
 import IconoCerrar from "./Img/icono-cerrar.png";
+import { Contexto } from "./Provider/ProvedorDatos";
 
 
 function App() {
@@ -14,6 +15,9 @@ function App() {
 
   const [editar,SetEditar] = useState([]);
   const [menu,SetMenu] = useState(false);
+  const {texto} = useContext(Contexto);
+  
+  
   function ShowMenu(){
 
     document.getElementsByClassName("menuMobil")[0].style.top="0px";
@@ -28,13 +32,23 @@ function App() {
     SetMenu(false);
   }
 
+
+  function CerrarSesion(){
+
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    window.location.reload();
+
+
+  }
+
   return (
     <Fragment>
       <Toaster/>
       <Menu>
         <NavLink to="/"> Home </NavLink>
         <NavLink to="/register"> Register </NavLink>
-        <NavLink to="/sign"> Sign </NavLink>
+        <NavLink to="/sign"onClick={CerrarSesion} >{texto}</NavLink>
         <Img src={menu ? IconoCerrar : IconoMenu} width="30px" alt="icono menu"onClick={menu ? HideMenu : ShowMenu} />
 
         <MenuMobil className="menuMobil" onClick={HideMenu}>

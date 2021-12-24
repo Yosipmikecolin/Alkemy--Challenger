@@ -4,11 +4,12 @@ const Contexto = createContext();
 
 function ProvedorDatos({children}){
 
-    const [dataAut,SetDataAut] = useState(false);
+    const [dataUpdate,SetDataUpdate] = useState(false);
+    const [texto,SetTexto] = useState("Sign");
 
 
     return(
-        <Contexto.Provider value={{dataAut,SetDataAut}}>
+        <Contexto.Provider value={{dataUpdate,SetDataUpdate,texto,SetTexto}}>
             {children}
         </Contexto.Provider>
     );
