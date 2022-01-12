@@ -17,7 +17,7 @@ function Registrar(){
         const data = this.responseText;
         const response = JSON.parse(data)
         if(response){
-        toast.success("Registrado con exito");
+        toast.success("Successfully registered");
         CambiarValorInput({concepto:"",monto:"",fecha:"",tipo:""});
         setTimeout(()=>{navegacion("/")},2300)
         }}

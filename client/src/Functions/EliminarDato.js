@@ -9,7 +9,7 @@ function EliminarDato(){
     const data = this.responseText;
     const response = await JSON.parse(data);
     if(response){
-    toast.success("Eliminado con exito");
+    toast.success("Successfully removed");
     setTimeout(()=>{window.location.reload()},2300);
     }else{
     toast.error("Hubo un error");

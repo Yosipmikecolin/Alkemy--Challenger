@@ -68,12 +68,12 @@ function Listado(){
     return(
     <tr key={item.Id}>
     <td data-titulo="#">{index+1}</td>
-    <td data-titulo="concepto">{item.Concepto}</td>
-    <td data-titulo="monto">{item.Monto}</td>
-    <td data-titulo="fecha">{item.Fecha}</td>
-    <td data-titulo="tipo">{item.Tipo}</td>
-    <td data-titulo="editar"><IconoEdit src={icono_editar} onClick={()=>{Editar(item.Id,item.Concepto,item.Monto,item.Fecha,item.Tipo)}} width="20" alt="editar"/></td>
-    <td data-titulo="eliminar"><IconoDelete onClick={()=>{Eliminar(item.Id)}} src={icono_eliminar} width="20" alt="editar"/></td>
+    <td data-titulo="Concept">{item.Concepto}</td>
+    <td data-titulo="Amount">{item.Monto}</td>
+    <td data-titulo="Date">{item.Fecha}</td>
+    <td data-titulo="Type">{item.Tipo}</td>
+    <td data-titulo="Modify"><IconoEdit src={icono_editar} onClick={()=>{Editar(item.Id,item.Concepto,item.Monto,item.Fecha,item.Tipo)}} width="20" alt="editar"/></td>
+    <td data-titulo="Remove"><IconoDelete onClick={()=>{Eliminar(item.Id)}} src={icono_eliminar} width="20" alt="editar"/></td>
     </tr>
     )})}
     

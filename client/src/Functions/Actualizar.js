@@ -12,7 +12,7 @@ function Actualizar(){
         const data = this.responseText;
         const response = JSON.parse(data);
         if(response){        
-        toast.success("Actualizado con exito");
+        toast.success("Successfully updated");
         CambiarValorInput({concepto:"",monto:"",fecha:"",tipo:""});
         SetDataAut(false);
         setTimeout(()=>{navegacion("/")},2300)
