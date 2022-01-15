@@ -18,6 +18,7 @@ function Balance(data){
     SetEgreso(egreso);  
     }});
     },[data]);
+    
     return[Ingreso,Egreso];
 
 }

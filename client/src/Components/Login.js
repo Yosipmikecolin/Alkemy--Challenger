@@ -1,17 +1,16 @@
 import { Fragment,useState } from "react";
 import styled from "styled-components";
-import {useNavigate} from "react-router-dom";
-import {toast} from "react-hot-toast";
+import Api from "../Api/api";
 
 function Login(){
 
 
     const [sesion,SetSesion] = useState(false);
-    const navegacion = useNavigate();
     const [inputs,SetInputs] = useState({username:"",email:"",password:""});
+    const {ApiRegister,ApiLogin} = Api();
     
-  
-  
+
+
 
     //GET INPUT VALUES
     function OnchangeInputs(e){
@@ -21,56 +20,9 @@ function Login(){
 
 
 
-    //REGISTER USER
-    function RegisterUser(e){
-    e.preventDefault();
-    const http = new XMLHttpRequest();
-    http.onload = async function(){
-    const data = this.responseText;
-    const response = await JSON.parse(data);
-    localStorage.setItem("user",response.user);
-    localStorage.setItem("token",response.token);
-    SetInputs({username:"",email:"",password:""});
-    toast.success('Welcome '+response.user,{icon:'👏',duration:2500});
-    setTimeout(()=>{
-    navegacion("/");
-    },2500)}
-
-    http.open("POST","http://localhost:4000/auth/sign_up");
-    http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    http.send(`username=${inputs.username}&email=${inputs.email}&password=${inputs.password}`); 
-    }
-
-
-    //USER LOGIN
-    function LogIn(e){
-
-    e.preventDefault();
-    const http = new XMLHttpRequest();
-    http.onload = async function(){
-    const data = this.responseText;
-    const response = await JSON.parse(data);    
-    if(response.token){
-    localStorage.setItem("token",response.token);
-    localStorage.setItem("user",response.user);
-    SetInputs({username:"",email:"",password:""});
-    toast.success('Welcome '+response.user,{icon:'👏',duration:2500});      
-    setTimeout(()=>{
-    navegacion("/");
-    },2500);
-    }else{          
-    toast.error("The username or password is incorrect")
-    }}
-
-    http.open("POST","http://localhost:4000/auth/sign_in");
-    http.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-    http.send(`email=${inputs.email}&password=${inputs.password}`);
-    }
-
-
     return(
     <Fragment>  
-    <Form onSubmit={ sesion ? RegisterUser : LogIn} method="POST">
+    <Form onSubmit={(e)=>{sesion ? ApiRegister(e,SetInputs,inputs) : ApiLogin(e,SetInputs,inputs)}}>
     <h1>{sesion ? "Register user" : "Log in"}</h1>
     <InputUser type="text" placeholder="Username" visual={sesion}  name="username" value={inputs.username} onChange={OnchangeInputs}/>
     <Input type="email" placeholder="Email" name="email" required value={inputs.email} onChange={OnchangeInputs}/>

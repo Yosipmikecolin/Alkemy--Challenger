@@ -2,44 +2,32 @@ import { Fragment, useEffect, useState } from "react";
 import styled from "styled-components";
 import icono_editar from "../Img/icono-editar.png";
 import icono_eliminar from "../Img/icono-eliminar.png";
-import ObtenerDatos from "../Functions/ObtenerDatos";
 import InputFilterValue from "../Functions/FiltrarDatos";
 import CargarMas from "../Functions/CargarDatos";
-import EliminarDato from "../Functions/EliminarDato";
 import EditarDato from "../Functions/EditarDato";
 import Balance from "../Functions/Balance";
+import Api from "../Api/api";
 
 
 function Listado(){
 
     const [cargando,SetCargando] = useState(false);
-    const [data] = ObtenerDatos();
+    const {ApiList,ApiDetele,ApiGetData} = Api();
+    const [data] = ApiGetData();
     const [sugerencias,FunctionFilter] = InputFilterValue();
     const [cant,viewButton,SumCant] = CargarMas();
-    const [Eliminar] = EliminarDato();
     const [Editar] = EditarDato();
     const [Ingreso,Egreso] = Balance(data);
+   
+    
     
  
   
     
     //AUTHENTICATE USER
     useEffect(()=>{
-    const token = localStorage.getItem("token");
-    const http = new XMLHttpRequest();
-    http.onload = async function(){
-    const data = this.responseText;
-    const response = await JSON.parse(data);
-    if(!response){
-    window.location.href ="/sign"
-    }else{
-    SetCargando(true);
-    }}
-    http.open("GET","http://localhost:4000/auth/");
-    http.setRequestHeader("autorizaciontoken", `${token}`);
-    http.send();
-     
-    },[])
+    ApiList(SetCargando);
+    },[ApiList])
 
 
     
@@ -73,7 +61,7 @@ function Listado(){
     <td data-titulo="Date">{item.Fecha}</td>
     <td data-titulo="Type">{item.Tipo}</td>
     <td data-titulo="Modify"><IconoEdit src={icono_editar} onClick={()=>{Editar(item.Id,item.Concepto,item.Monto,item.Fecha,item.Tipo)}} width="20" alt="editar"/></td>
-    <td data-titulo="Remove"><IconoDelete onClick={()=>{Eliminar(item.Id)}} src={icono_eliminar} width="20" alt="editar"/></td>
+    <td data-titulo="Remove"><IconoDelete onClick={()=>{ApiDetele(item.Id)}} src={icono_eliminar} width="20" alt="editar"/></td>
     </tr>
     )})}
     

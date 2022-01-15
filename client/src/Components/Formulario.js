@@ -2,8 +2,7 @@ import { Fragment, useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import {Contexto} from "../Provider/ProvedorDatos";
 import GetValues from "../Functions/GetValues";
-import Registrar from "../Functions/Registrar";
-import Actualizar from "../Functions/Actualizar";
+import Api from "../Api/api";
 
 function Formulario(){
 
@@ -11,31 +10,20 @@ function Formulario(){
     const [cargando,SetCargando] = useState(false);
     const {dataUpdate,SetDataUpdate} = useContext(Contexto);
     const [valor,CambiarValorInput,onChangeValue] = GetValues();
-    const [RegisterBudget] = Registrar();
-    const [UpdateBudget] = Actualizar();
+    const {ApiForm,ApiUpdate,ApiRegisterData} = Api();
 
 
 
     //AUTHENTICATE USER
     useEffect(()=>{
-    const token = localStorage.getItem("token");
-    const http = new XMLHttpRequest();
-    http.onload = async function(){  
-    const data = this.responseText;
-    const response = await JSON.parse(data);
-    if(!response){
-    window.location.href ="/sign"
-    }else{
-    SetCargando(true);
-    }}
-    http.open("GET","http://localhost:4000/auth/");
-    http.setRequestHeader("autorizaciontoken", `${token}`);
-    http.send();
-    //CHECK IF YOU NEED TO UPDATE
+    ApiForm(SetCargando);
+    },[ApiForm]);
+
+    
+
+    useEffect(()=>{
     if(dataUpdate){CambiarValorInput(dataUpdate)}
-
-
-    },[dataUpdate,CambiarValorInput]);
+    },[CambiarValorInput,dataUpdate])
 
 
 
@@ -43,7 +31,7 @@ function Formulario(){
     return(
     cargando &&
     <Fragment> 
-    <Form onSubmit={(e)=>{ dataUpdate ? UpdateBudget(e,CambiarValorInput,SetDataUpdate,dataUpdate,valor) : RegisterBudget(e,valor,CambiarValorInput)}}>
+    <Form onSubmit={(e)=>{ dataUpdate ? ApiUpdate(e,CambiarValorInput,SetDataUpdate,dataUpdate,valor) : ApiRegisterData(e,valor,CambiarValorInput)}}>
     <h2>{dataUpdate ? "Edit record" : "Registration"}</h2> 
     <Input type="text" placeholder="Concept" name="concepto" value={valor.concepto} onChange={(e)=>{onChangeValue(e)}}required/>
     <Input type="text" placeholder="5.400" name="monto" value={valor.monto}  onChange={(e)=>{onChangeValue(e)}}  required/>
