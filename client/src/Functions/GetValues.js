@@ -2,6 +2,9 @@ import { useState } from "react";
 
 function GetValues(){
 
+    /*It is a function that returns the current data that is written to the input */
+
+
     const [valor,CambiarValorInput] = useState({concepto:"",monto:"",fecha:"",tipo:""});
     function onChangeValue(e){
     const {name,value} = e.target;

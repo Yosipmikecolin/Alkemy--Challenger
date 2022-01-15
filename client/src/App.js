@@ -1,9 +1,9 @@
 import { Fragment, useState } from "react";
 import {Route,NavLink,Routes} from "react-router-dom";
 import styled from "styled-components";
-import Formulario from "./Components/Formulario";
+import Form from "./Components/Form";
 import Login from "./Components/Login";
-import Listado from "./Components/Listado";
+import List from "./Components/List";
 import {Toaster} from "react-hot-toast";
 import IconoMenu from "./Img/icono-menu.png";
 import IconoCerrar from "./Img/icono-cerrar.png";
@@ -47,8 +47,8 @@ function App() {
   </Menu>
 
   <Routes>
-  <Route path="/" element={<Listado SetEditar={SetEditar}/>}/>
-  <Route path="/register" element={<Formulario SetEditar={SetEditar} editar={editar}/>}/>
+  <Route path="/" element={<List SetEditar={SetEditar}/>}/>
+  <Route path="/register" element={<Form SetEditar={SetEditar} editar={editar}/>}/>
   <Route path="/sign" element={<Login/>}/>
   </Routes>
   </Fragment>

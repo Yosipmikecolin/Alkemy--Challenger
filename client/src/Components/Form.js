@@ -4,9 +4,9 @@ import {Contexto} from "../Provider/ProvedorDatos";
 import GetValues from "../Functions/GetValues";
 import Api from "../Api/api";
 
-function Formulario(){
+function Form(){
 
-    
+    //DECLARATION OF DATA TO BE USED
     const [cargando,SetCargando] = useState(false);
     const {dataUpdate,SetDataUpdate} = useContext(Contexto);
     const [valor,CambiarValorInput,onChangeValue] = GetValues();
@@ -21,17 +21,19 @@ function Formulario(){
 
     
 
+    //CHECK IF THERE IS DATA TO UPDATE
     useEffect(()=>{
     if(dataUpdate){CambiarValorInput(dataUpdate)}
     },[CambiarValorInput,dataUpdate])
 
 
-
     
+
+    //EXPENSE FORM
     return(
     cargando &&
     <Fragment> 
-    <Form onSubmit={(e)=>{ dataUpdate ? ApiUpdate(e,CambiarValorInput,SetDataUpdate,dataUpdate,valor) : ApiRegisterData(e,valor,CambiarValorInput)}}>
+    <Formu onSubmit={(e)=>{ dataUpdate ? ApiUpdate(e,CambiarValorInput,SetDataUpdate,dataUpdate,valor) : ApiRegisterData(e,valor,CambiarValorInput)}}>
     <h2>{dataUpdate ? "Edit record" : "Registration"}</h2> 
     <Input type="text" placeholder="Concept" name="concepto" value={valor.concepto} onChange={(e)=>{onChangeValue(e)}}required/>
     <Input type="text" placeholder="5.400" name="monto" value={valor.monto}  onChange={(e)=>{onChangeValue(e)}}  required/>
@@ -47,12 +49,14 @@ function Formulario(){
     </Fragment>}     
     </Select>
     <Boton>{dataUpdate ? "Update registration" : "Register operation"}</Boton> 
-    </Form>  
+    </Formu>  
     </Fragment>
     );
 }
 
-    const Form = styled.form`
+
+    //MY COMPONENT STYLES
+    const Formu = styled.form`
     background-color:#191A19;
     padding:20px;
     width:400px;
@@ -119,4 +123,4 @@ function Formulario(){
     &:hover{background-color: #12bebf;}
 `;
 
-export default Formulario;
+export default Form; 

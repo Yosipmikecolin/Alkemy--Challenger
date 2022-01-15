@@ -5,6 +5,8 @@ import Api from "../Api/api";
 function Login(){
 
 
+
+    //DECLARATION OF DATA TO BE USED
     const [sesion,SetSesion] = useState(false);
     const [inputs,SetInputs] = useState({username:"",email:"",password:""});
     const {ApiRegister,ApiLogin} = Api();
@@ -19,7 +21,7 @@ function Login(){
     }
 
 
-
+    //USER FORM
     return(
     <Fragment>  
     <Form onSubmit={(e)=>{sesion ? ApiRegister(e,SetInputs,inputs) : ApiLogin(e,SetInputs,inputs)}}>
@@ -36,8 +38,9 @@ function Login(){
 
 
 
-    const Form = styled.form`
 
+    //MY COMPONENT STYLES
+    const Form = styled.form`
     background-color:#191A19;
     padding:20px;
     width:400px;

@@ -3,6 +3,11 @@ import converter  from 'convert-string-to-number';
 
 function Balance(data){
 
+
+    /*The balance function goes through all the expenses and adds the income and
+     expenses and returns them in some variables */
+
+
     const [Ingreso,SetIngreso] = useState(0);
     const [Egreso,SetEgreso] = useState(0);
 

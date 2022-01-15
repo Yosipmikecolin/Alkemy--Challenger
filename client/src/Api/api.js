@@ -7,7 +7,7 @@ function Api(){
 
     const navegacion = useNavigate();
     
-    //FUNCION AUTENTICAR PAGINA FORMULARIO
+    //FUNCTION AUTHENTICATE FORM PAGE
     function ApiForm(SetCargando){
         const token = localStorage.getItem("token");
         const http = new XMLHttpRequest();
@@ -27,8 +27,7 @@ function Api(){
 
 
 
-    //FUNCION AUTENTICAR PAGINA LISTADO
-
+    //AUTHENTICATE LISTING PAGE FUNCTION
     function ApiList(SetCargando){
 
         const token = localStorage.getItem("token");
@@ -49,9 +48,9 @@ function Api(){
     }
 
 
-        //FUNCION AUTENTICAR PAGINA LISTADO
-
+    //REGISTER USER FUNCTION
     function ApiRegister(e,SetInputs,inputs){
+
         e.preventDefault();
         const http = new XMLHttpRequest();
         http.onload = async function(){
@@ -72,34 +71,37 @@ function Api(){
 
 
 
-        function ApiLogin(e,SetInputs,inputs){
+    //FUNCTION OF AUTHENTICATING USER EXISTENCE
+    function ApiLogin(e,SetInputs,inputs){
 
-            e.preventDefault();
-            const http = new XMLHttpRequest();
-            http.onload = async function(){
-            const data = this.responseText;
-            const response = await JSON.parse(data);    
-            if(response.token){
-            localStorage.setItem("token",response.token);
-            localStorage.setItem("user",response.user);
-            SetInputs({username:"",email:"",password:""});
-            toast.success('Welcome '+response.user,{icon:'👏',duration:2500});      
-            setTimeout(()=>{
-            navegacion("/");
-            },2500);
-            }else{          
-            toast.error("The username or password is incorrect")
-            }}
+        e.preventDefault();
+        const http = new XMLHttpRequest();
+        http.onload = async function(){
+        const data = this.responseText;
+        const response = await JSON.parse(data);    
+        if(response.token){
+        localStorage.setItem("token",response.token);
+        localStorage.setItem("user",response.user);
+        SetInputs({username:"",email:"",password:""});
+        toast.success('Welcome '+response.user,{icon:'👏',duration:2500});      
+        setTimeout(()=>{
+        navegacion("/");
+        },2500);
+        }else{          
+        toast.error("The username or password is incorrect")
+        }}
 
-            http.open("POST","http://localhost:4000/auth/sign_in");
-            http.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-            http.send(`email=${inputs.email}&password=${inputs.password}`);
+        http.open("POST","http://localhost:4000/auth/sign_in");
+        http.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+        http.send(`email=${inputs.email}&password=${inputs.password}`);
 
         }
 
 
 
-        function ApiUpdate(e,CambiarValorInput,SetDataAut,dataUpdate,valor){
+
+    //FUNCTION TO UPDATE AN EXPENSE
+    function ApiUpdate(e,CambiarValorInput,SetDataAut,dataUpdate,valor){
 
         e.preventDefault();
         const http = new XMLHttpRequest();
@@ -112,7 +114,7 @@ function Api(){
         SetDataAut(false);
         setTimeout(()=>{navegacion("/")},2300)
         }else{
-        toast.error("Los campos no pueden estar vacios");
+        toast.error("It is necessary to fill all the fields");
         }}
         http.open("PUT","http://localhost:4000/api/update");
         http.setRequestHeader("Content-type","application/x-www-form-urlencoded");
@@ -121,79 +123,74 @@ function Api(){
         }
 
 
-        function ApiDetele(id){
 
-            const http = new XMLHttpRequest();
-            http.onload = async function(){
-            const data = this.responseText;
-            const response = await JSON.parse(data);
-            if(response){
-            toast.success("Successfully removed");
-            setTimeout(()=>{window.location.reload()},2300);
-            }else{
-            toast.error("Hubo un error");
-            }}
-            http.open("DELETE","http://localhost:4000/api/delete");
-            http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            http.send(`id=${id}`)
+    //DELETE AN EXPENDITURE FUNCTION
+    function ApiDetele(id){
+
+        const http = new XMLHttpRequest();
+        http.onload = async function(){
+        const data = this.responseText;
+        const response = await JSON.parse(data);
+        if(response){
+        toast.success("Successfully removed");
+        setTimeout(()=>{window.location.reload()},2300);
+        }else{
+        toast.error("There was a mistake");
+        }}
+        http.open("DELETE","http://localhost:4000/api/delete");
+        http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        http.send(`id=${id}`)
 
         }
 
 
-        function ApiGetData(){
 
-            const [data,SetData] = useState([]);
-            useEffect(()=>{
+    //FUNCTION THAT OBTAINS THE USER DATA
+    function ApiGetData(){
 
-                var http = new XMLHttpRequest();
-                http.onload =  function(){
-                const response =  JSON.parse(this.responseText);
-                SetData(response);     
-                }
-              
-                const user = localStorage.getItem("user");
-                http.open("GET",`http://localhost:4000/api/?user=${user}`);
-                http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                http.send();
-              
-                    
-                },[]);
+        const [data,SetData] = useState([]);
+        useEffect(()=>{
+        var http = new XMLHttpRequest();
+        http.onload =  function(){
+        const response =  JSON.parse(this.responseText);
+        SetData(response);     
+        }    
+        const user = localStorage.getItem("user");
+        http.open("GET",`http://localhost:4000/api/?user=${user}`);
+        http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        http.send();       
+        },[]);
             
                 return[data]
 
         }
 
+    
+    //FUNCTION TO REGISTER OR SAVE A NEW EXPENSE
+    function ApiRegisterData(e,valor,CambiarValorInput){
 
-        function ApiRegisterData(e,valor,CambiarValorInput){
-            e.preventDefault();
-            const user = localStorage.getItem("user");
-            if(!valor.concepto || !valor.monto || !valor.fecha || !valor.tipo){
-            toast.error("Los campos no pueden estar vacios");
-            }else{
-            const http = new XMLHttpRequest();
-            http.onload = function(){
-        
-            const data = this.responseText;
-            const response = JSON.parse(data)
-            if(response){
-            toast.success("Successfully registered");
-            CambiarValorInput({concepto:"",monto:"",fecha:"",tipo:""});
-            setTimeout(()=>{navegacion("/")},2300)
-            }}
-            http.open("POST","http://localhost:4000/api/register");
-            http.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-            http.send(`concepto=${valor.concepto}&monto=${valor.monto}&fecha=${valor.fecha}&tipo=${valor.tipo}&user=${user}`);
+        e.preventDefault();
+        const user = localStorage.getItem("user");
+        if(!valor.concepto || !valor.monto || !valor.fecha || !valor.tipo){
+        toast.error("It is necessary to fill all the fields");
+        }else{
+        const http = new XMLHttpRequest();
+        http.onload = function(){
+        const data = this.responseText;
+        const response = JSON.parse(data)
+        if(response){
+        toast.success("Successfully registered");
+        CambiarValorInput({concepto:"",monto:"",fecha:"",tipo:""});
+        setTimeout(()=>{navegacion("/")},2300)
+        }}
+        http.open("POST","http://localhost:4000/api/register");
+        http.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+        http.send(`concepto=${valor.concepto}&monto=${valor.monto}&fecha=${valor.fecha}&tipo=${valor.tipo}&user=${user}`);
 
         }
     
     }
 
-
-
-
-
-
-    
 
     return{ApiForm,ApiList,ApiRegister,ApiLogin,ApiUpdate,ApiDetele,ApiGetData,ApiRegisterData};
 

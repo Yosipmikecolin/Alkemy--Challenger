@@ -2,26 +2,26 @@ import { Fragment, useEffect, useState } from "react";
 import styled from "styled-components";
 import icono_editar from "../Img/icono-editar.png";
 import icono_eliminar from "../Img/icono-eliminar.png";
-import InputFilterValue from "../Functions/FiltrarDatos";
-import CargarMas from "../Functions/CargarDatos";
-import EditarDato from "../Functions/EditarDato";
+import InputFilterValue from "../Functions/FilterData";
+import LoadData from "../Functions/LoadData";
+import EditData from "../Functions/EditData";
 import Balance from "../Functions/Balance";
 import Api from "../Api/api";
 
 
-function Listado(){
+function List(){
 
+
+    //DECLARATION OF DATA TO BE USED
     const [cargando,SetCargando] = useState(false);
     const {ApiList,ApiDetele,ApiGetData} = Api();
     const [data] = ApiGetData();
     const [sugerencias,FunctionFilter] = InputFilterValue();
-    const [cant,viewButton,SumCant] = CargarMas();
-    const [Editar] = EditarDato();
+    const [cant,viewButton,SumCant] = LoadData();
+    const [Editar] = EditData();
     const [Ingreso,Egreso] = Balance(data);
    
     
-    
- 
   
     
     //AUTHENTICATE USER
@@ -32,6 +32,7 @@ function Listado(){
 
     
 
+    //BALANCE LIST
     return(
     cargando &&
     <Contenedor>
@@ -81,6 +82,7 @@ function Listado(){
 
 
 
+    //MY COMPONENT STYLES
     const Contenedor = styled.div`
     width:900px;
     margin-left:auto;
@@ -167,4 +169,4 @@ function Listado(){
     }
     `;
 
-export default Listado;
+export default List;
